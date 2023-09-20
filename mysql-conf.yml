@@ -1,0 +1,8 @@
+mysql_root_password:"DBNODE@dbnode"
+mysql_databases:
+  - name: bhw
+mysql_users:
+  - name: bhw
+    host: "%"
+    password: "Ltest@12345"
+    priv: "bhw.*":ALL

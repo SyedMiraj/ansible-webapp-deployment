@@ -1,0 +1,42 @@
+---
+- name: Install MySQL on DB Hosts
+  hosts: db  # Replace 'db_hosts' with your inventory group or specific host(s)
+  become: yes  # This will use sudo to become a superuser if not already
+
+  tasks:
+    - name: Install system updates for centos systems
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes
+    
+    - name: Import MySQL GPG Key (CentOS/Red Hat)
+      rpm_key:
+        key: https://repo.mysql.com/RPM-GPG-KEY-mysql
+        state: present
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'CentOS'
+
+    - name: Install MySQL Repository Package (CentOS/Red Hat)
+      yum:
+        name: http://repo.mysql.com/mysql57-community-release-el7-10.noarch.rpm
+        state: present
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'CentOS'
+
+    - name: Install MySQL Server (CentOS/Red Hat)
+      yum:
+        name: mysql-community-server
+        state: present
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'CentOS'
+
+    - name: Start MySQL Service
+      service:
+        name: mysqld  # Use 'mysqld' for CentOS/Red Hat
+        state: started
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'CentOS'
+
+    - name: Start MySQL Service (Debian/Ubuntu)
+      service:
+        name: mysql  # Use 'mysql' for Debian/Ubuntu
+        state: started
+      when: ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu'
+

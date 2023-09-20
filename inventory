@@ -1,0 +1,14 @@
+[app]
+app-node1
+app-node2
+
+[db]
+db-node
+
+[lb]
+haproxy-node
+
+[master:children]
+app
+db
+lb
